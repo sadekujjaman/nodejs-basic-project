@@ -49,11 +49,11 @@ Note: Keep in mind that we're not setting up a database for this exercise; we'll
 
 #### Your Tasks:
 
-1. Task 1: Create a route to handle a GET request to fetch all movies and send the movies JSON array as a response. Note: Returns an empty array if movies not found.
+1. Create a route to handle a GET request to fetch all movies and send the movies JSON array as a response. Note: Returns an empty array if movies not found.
 
-2. Task 2: Create a route that accepts a movie ID as a parameter and returns the details of the specific movie with that ID. Note: It should return a single json object if movies found, otherwise returns empty object.
+2. Create a route that accepts a movie ID as a parameter and returns the details of the specific movie with that ID. Note: It should return a single json object if movies found, otherwise returns empty object.
 
-3. Task 3: Create a route to handle a POST request to add a new movie to the "movies" array. Note:
+3. Create a route to handle a POST request to add a new movie to the "movies" array. Note:
 
    - Validate Id and name fields - these must be unique. If a movie already exists with the provided id or name, then return "Movie with ${id}/${name} already exists."
    - Validate other fields, if a field not found or for invalid data, return "Invalid field - ${fieldName}"
@@ -62,7 +62,7 @@ Note: Keep in mind that we're not setting up a database for this exercise; we'll
    - Apply auto coercion for number fields(if possible). {"year": "2016"} should be converted to {"year": 2016} but {"year" : "abc"} should return "Invalid field - year".
    - Return the added movie and a success message: "The movie has been added"
 
-4. Task 4: Create a route to update the details of a specific movie by its ID using a PUT request. Note:
+4. Create a route to update the details of a specific movie by its ID using a PUT request. Note:
 
    - Id field is not modifiable.
    - All the other fields are modifiable.
@@ -70,20 +70,20 @@ Note: Keep in mind that we're not setting up a database for this exercise; we'll
    - If validation failed then return an error message: "Invalid field - ${field} to update!"
    - Otherwise, return the updated movie and a success message: "The movie has been updated"
 
-5. Task 5: Create a route to delete a movie by its ID using a DELETE request. Note:
+5. Create a route to delete a movie by its ID using a DELETE request. Note:
 
    - If the movie not found then return an error message: "Movie with id ${id} not found!"
    - Return the deleted movie and a success message: "The movie has been deleted".
 
-6. Task 6: Create a route to search movies based on their name. The route should accept a query parameter named "name" and return an array of movies that match the provided name.
+6. Create a route to search movies based on their name. The route should accept a query parameter named "name" and return an array of movies that match the provided name.
 
-7. Task 7: Create a route to search movies based on their ratings. The route should accept a query parameter named "rating" and return an array of movies with ratings greater than or equal to the provided value.
+7. Create a route to search movies based on their ratings. The route should accept a query parameter named "rating" and return an array of movies with ratings greater than or equal to the provided value.
 
-8. Task 8: Create a route to search movies based on their language. The route should accept a query parameter named "language" and return an array of movies that match the provided language.
+8. Create a route to search movies based on their language. The route should accept a query parameter named "language" and return an array of movies that match the provided language.
 
-9. Task 9: Create a route to search movies based on their genres. The route should accept a query parameter named "genre" which can contain a single genre or a comma-separated list of genres. Return an array of movies that match at least one of the provided genres.
+9. Create a route to search movies based on their genres. The route should accept a query parameter named "genre" which can contain a single genre or a comma-separated list of genres. Return an array of movies that match at least one of the provided genres.
 
-10. Task 10: Test all the implemented routes using a tool like Postman to ensure they are working as expected.
+10. Test all the implemented routes using a tool like Postman to ensure they are working as expected.
 
 All the data contains in the movies array. Here's what the schema looks like:
 
