@@ -11,10 +11,6 @@ This is a [NodeJS](https://nodejs.org/en) project bootstrapped with [`node`](htt
 3. [Nodemon](https://www.npmjs.com/package/nodemon), See below installation guide.
 4. MacOS, Windows (including WSL), and Linux are supported
 
-### Software Requirements
-
-1. [MongoDB](https://www.mongodb.com/): A NoSQL database used for storing data
-
 ### Install Nodemon Using npm
 
 ```bash
@@ -23,13 +19,7 @@ npm install -g nodemon
 
 ### Setup
 
-First, install the dependencies for this project (Make sure you're in the `bank` directory):
-
-To change the directory to `bank`,
-
-```bash
-cd bank
-```
+First, install the dependencies for this project (Make sure you're in the project directory):
 
 ```bash
 yarn
@@ -45,32 +35,66 @@ yarn start
 npm run start
 ```
 
-Open [http://localhost:4002](http://localhost:4002) with your browser to see `Your server is running on port 4002!`..
+Open [http://localhost:4000](http://localhost:4000) with your browser to see `Server listening at http://localhost:4000`.
 
-### FAQ
+### Tasks
 
-To work with this project one must have prepare a environment file with following properties.
-The file name should be `.env` and must contain in the project directory.
+There are a set of tasks to complete related to a basic Node.js project.
+
+1. The project involves creating an API to manage a list of movies using Express and a JSON file.
+2. Those tasks include implementing routes for fetching all movies, getting a specific movie by ID, adding new movies, updating existing movies, and deleting movies.
+3. Additionally, you'll need to implement search functionality for movies based on their name, ratings, genre, and language.
+
+Note: Keep in mind that we're not setting up a database for this exercise; we'll be working with a JSON file for simplicity. Take your time to understand the provided code and work on the tasks within the next 3 days. If you have any questions or need clarification, feel free to ask.
+
+#### Your Tasks:
+
+1. Task 1: Create a route to handle a GET request to fetch all movies and send the movies JSON array as a response. Note: Returns an empty array if movies not found.
+2. Task 2: Create a route that accepts a movie ID as a parameter and returns the details of the specific movie with that ID. Note: It should return a single json object if movies found, otherwise returns empty object.
+3. Task 3: Create a route to handle a POST request to add a new movie to the "movies" array. Note: ```
+   i) Validate Id and name fields - these must be unique. If a movie already exists with the provided id or name, then return "Movie with ${id}/${name} already exists."
+   ii) Validate other fields, if a field not found or for invalid data, return "Invalid field - ${fieldName}"
+   iii) Must have at least one genre.
+   iv) Rating must be between 1 to 10(inclusive)
+   iv) Apply auto coercion for number fields(if possible). {"year": "2016"} should be converted to {"year": 2016} but {"year" : "abc"} should return "Invalid field - year".
+   v) Return the added movie and a success message: "The movie has been added"
 
 ```
-MONGODB_URI=mongodb+srv://<username>:<password>@<host>.mongodb.net/<db-name>
+4. Task 4: Create a route to update the details of a specific movie by its ID using a PUT request. Note:
 ```
 
-\*\*\* Replace `<username>` and `<password>` with your mongodb username and password respectfully. Replace `<host>` with your mongodb host name. Also replace `db-name` with your db name in mongodb(ex: demo).
-
-Here is an example of `MONGODB_URI`:
-
-```bash
-MONGODB_URI=mongodb+srv://myuser:mypassword@abccew73.mongodb.net/demo
+i) Id field is not modifiable.
+ii) All the other fields are modifiable.
+iii) Before updating, validate all the fields as Task 3.
+iv) If validation failed then return an error message: "Invalid field - ${field} to update!"
+v) Otherwise, return the updated movie and a success message: "The movie has been updated"
 
 ```
+5. Task 5: Create a route to delete a movie by its ID using a DELETE request.  Note:
+```
 
-You can get this `MONGODB_URI` from your mongodb atlas account. [Mongodb Atlas/](https://cloud.mongodb.com/).
+i) If the movie not found then return an error message: "Movie with id ${id} not found!"
+ii) Return the deleted movie and a success message: "The movie has been deleted".
 
-To get more info:
+```
+6. Task 6: Create a route to search movies based on their name. The route should accept a query parameter named "name" and return an array of movies that match the provided name.
+7. Task 7: Create a route to search movies based on their ratings. The route should accept a query parameter named "rating" and return an array of movies with ratings greater than or equal to the provided value.
+8. Task 8: Create a route to search movies based on their language. The route should accept a query parameter named "language" and return an array of movies that match the provided language.
+9. Task 9: Create a route to search movies based on their genres. The route should accept a query parameter named "genre" which can contain a single genre or a comma-separated list of genres. Return an array of movies that match at least one of the provided genres.
+10. Task 10: Test all the implemented routes using a tool like Postman to ensure they are working as expected.
+```
 
-1. [NodeJS Quick Start](https://nodejs.dev/en/learn/)
-2. [Mongodb Atlas Quick Start](https://www.mongodb.com/docs/atlas/getting-started/)
-3. [Mongodb](https://www.mongodb.com/docs/drivers/node/current/)
+All the data contains in the movies array. Here's what the schema looks like:
 
-API routes can be accessed on [http://localhost:4002/api/v1/](http://localhost:4002/api/v1/). Those endpoints are available in `index.js`.
+```
+[
+  {
+    "id": number,
+    "name": string,
+    "genre": [string],
+    "rating": number,
+    "year": number,
+    "language": string
+  }
+]
+```

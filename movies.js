@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const movies = require("./movies.json");
+console.log({ movies });
 
 /**
 movies: 
@@ -37,8 +38,8 @@ movies:
 // ii) Validate other fields, if a field not found or for invalid data, return "Invalid field - ${fieldName}"
 // iii) Must have at least one genre.
 // iv) Rating must be between 1 to 10(inclusive)
-// iv) Apply auto coercion for number fields(if possible). {"year": "2016"} should be converted to {"year": 2016} but {"year" : "abc"} should return "Invalid field - year".
-// v) Return the added movie and a success message: "The movie has been added"
+// v) Apply auto coercion for number fields(if possible). {"year": "2016"} should be converted to {"year": 2016} but {"year" : "abc"} should return "Invalid field - year".
+// vi) Return the added movie and a success message: "The movie has been added"
 // Write code here
 
 // =============
@@ -92,3 +93,5 @@ movies:
 // Task 10: Test all the implemented routes using a tool like Postman to ensure they are working as expected.
 
 // =============
+
+module.exports = router;
