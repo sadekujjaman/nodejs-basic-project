@@ -5,7 +5,7 @@ const movies = require("./movies");
 const app = express();
 
 app.use(express.json());
-app.use("/api/v1/movies", movies);
+app.use("/dipto", movies);
 app.get("/", (req, res) => {
   res.send(`Server listening at http://localhost:${port}`);
 });

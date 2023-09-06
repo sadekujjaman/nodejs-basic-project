@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
+
 const movies = require("./movies.json");
-console.log({ movies });
+const fs = require("node:fs");
 
 /**
 movies: 
@@ -21,6 +22,15 @@ movies:
 // Task 1: Create a route to handle a GET request to fetch all movies and send the movies JSON array as a response.
 // Note: Returns an empty array if movies not found.
 // Write code here
+router.get("/", (req, res) => {
+  res.send("Dipto Moja");
+});
+router.get("/movies", (req, res) => {
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    const movies = JSON.parse(data) || [];
+    res.json(movies);
+  });
+});
 
 // =============
 
@@ -28,6 +38,23 @@ movies:
 // Task 2: Create a route that accepts a movie ID as a parameter and returns the details of the specific movie with that ID.
 // Note: It should return a single json object if movies found, otherwise returns empty object.
 // Write code here
+
+router.get("/movies/:id", (req, res) => {
+  const movieId = parseInt(req.params.id);
+
+  if (isNaN(movieId)) {
+    return res.status(400).json({ error: "Invalid movie ID" });
+  }
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    const movies = JSON.parse(data);
+    const movie = movies.find((m) => m.id === movieId);
+
+    if (!movie) {
+      return res.status(404).json({ error: "Movie not found" });
+    }
+    res.json(movie);
+  });
+});
 
 // =============
 
@@ -63,35 +90,153 @@ movies:
 // ii) Return the deleted movie and a success message: "The movie has been deleted".
 // Write code here
 
+router.delete("/:id", (req, res) => {
+  const movieId = parseInt(req.params.id);
+
+  if (isNaN(movieId)) {
+    return res.status(400).json({ error: "Movie with this id not found!" });
+  }
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    try {
+      let movies = JSON.parse(data);
+      const index = movies.findIndex((movie) => movie.id === movieId);
+
+      if (index === -1) {
+        return res.status(404).json({ error: "Movie with this id not found!" });
+      }
+      movies.splice(index, 1);
+      fs.writeFile("movies.json", JSON.stringify(movies, null, 2), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        res.json({ message: "The movie has been deleted by Dipto" });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+});
+
 // =============
 
 // =============
 // Task 6: Create a route to search movies based on their name. The route should accept a query parameter named "name" and return an array of movies that match the provided name.
 // Write code here
+router.get("/name", (req, res) => {
+  const { name } = req.query;
 
+  if (!name) {
+    return res.status(400).json({ error: "Movie name is required" });
+  }
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    const movies = JSON.parse(data);
+    const matchingMovies = movies.filter((movie) =>
+      movie.name.toLowerCase().includes(name.toLowerCase())
+    );
+
+    if (matchingMovies.length === 0) {
+      return res.status(404).json({ error: "No matching movies found" });
+    }
+    res.json(matchingMovies);
+  });
+});
 // =============
 
 // =============
 // Task 7: Create a route to search movies based on their ratings. The route should accept a query parameter named "rating" and return an array of movies with ratings greater than or equal to the provided value.
 // Write code here
 
+router.get("/rating", (req, res) => {
+  const { rating } = req.query;
+  if (!rating) {
+    return res.status(400).json({ error: "Rating is required" });
+  }
+  const numericRating = parseFloat(rating);
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    const movies = JSON.parse(data);
+    const matchingMovies = movies.filter(
+      (movie) => movie.rating >= numericRating
+    );
+    if (matchingMovies.length === 0) {
+      return res.status(404).json({ error: "No matching movies found" });
+    }
+    res.json(matchingMovies);
+  });
+});
+
 // =============
 
 // =============
 // Task 8: Create a route to search movies based on their language. The route should accept a query parameter named "language" and return an array of movies that match the provided language.
 // Write code here
+router.get("/language", (req, res) => {
+  const { language } = req.query;
 
+  if (!language) {
+    return res.status(400).json({ error: "Movie name is required" });
+  }
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    const movies = JSON.parse(data);
+    const matchingMovies = movies.filter((movie) =>
+      movie.language.toLowerCase().includes(language.toLowerCase())
+    );
+
+    if (matchingMovies.length === 0) {
+      return res.status(404).json({ error: "No matching movies found" });
+    }
+    res.json(matchingMovies);
+  });
+});
 // =============
 
 // =============
 // Task 9: Create a route to search movies based on their genres. The route should accept a query parameter named "genre" which can contain a single genre or a comma-separated list of genres. Return an array of movies that match at least one of the provided genres.
 // Write code here
 
+router.get("/genre", (req, res) => {
+  const { genre } = req.query;
+
+  if (!genre) {
+    return res.status(400).json({ error: "Genre is required" });
+  }
+  fs.readFile("movies.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    try {
+      const movies = JSON.parse(data);
+      const matchingMovies = movies.filter((movie) =>
+        movie.genre.includes(genre)
+      );
+
+      if (matchingMovies.length === 0) {
+        return res.status(404).json({ error: "No matching movies found" });
+      }
+      res.json(matchingMovies);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+});
+
 // =============
 
 // =============
 // Task 10: Test all the implemented routes using a tool like Postman to ensure they are working as expected.
-
+// ---------------------------
+// ----------------------------
+// -------------------------- Done---------------
 // =============
 
 module.exports = router;
