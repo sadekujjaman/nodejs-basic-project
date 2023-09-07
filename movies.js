@@ -69,6 +69,42 @@ router.get("/movies/:id", (req, res) => {
 // vi) Return the added movie and a success message: "The movie has been added"
 // Write code here
 
+router.post("/add", (req, res) => {
+  const newMovie = req.body;
+  const existingMovieById = movies.find((movie) => movie.id === newMovie.id);
+  const existingMovieByName = movies.find(
+    (movie) => movie.name === newMovie.name
+  );
+
+  if (existingMovieById || existingMovieByName) {
+    return res.status(400).json({
+      error: `Movie with ${newMovie.id}/${newMovie.name} already exists.`,
+    });
+  }
+  const requiredFields = ["id", "name", "genre", "rating", "year", "language"];
+
+  for (const field of requiredFields) {
+    if (!newMovie[field]) {
+      return res.status(400).json({ error: `Invalid field - ${field}` });
+    }
+  }
+  if (!Array.isArray(newMovie.genre) || newMovie.genre.length === 0) {
+    return res.status(400).json({ error: "At least one genre is required" });
+  }
+  const numericRating = parseFloat(newMovie.rating);
+  if (isNaN(numericRating) || numericRating < 1 || numericRating > 10) {
+    return res.status(400).json({ error: "Rating must be between 1 and 10 " });
+  }
+  const numericYear = parseInt(newMovie.year);
+  if (!isNaN(numericYear)) {
+    newMovie.year = numericYear;
+  } else {
+    return res.status(400).json({ error: "Invalid field - year" });
+  }
+  movies.push(newMovie);
+  res.json({ message: "The movie has been added", movie: newMovie });
+});
+
 // =============
 
 // =============
@@ -80,6 +116,49 @@ router.get("/movies/:id", (req, res) => {
 // iv) If validation failed then return an error message: "Invalid field - ${field} to update!"
 // v) Otherwise, return the updated movie and a success message: "The movie has been updated"
 // Write code here
+
+router.put("/edit/:id", (req, res) => {
+  const movieId = parseInt(req.params.id);
+  const updatedMovie = req.body;
+  if (!Number.isInteger(movieId)) {
+    return res.status(400).json({ error: "Invalid movie ID" });
+  }
+  const index = movies.findIndex((movie) => movie.id === movieId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Movie not found" });
+  }
+  const requiredFields = ["name", "genre", "rating", "year", "language"];
+
+  for (const field of requiredFields) {
+    if (!updatedMovie[field]) {
+      return res
+        .status(400)
+        .json({ error: `Invalid field - ${field} to update!` });
+    }
+  }
+  const numericRating = parseFloat(updatedMovie.rating);
+  if (isNaN(numericRating) || numericRating < 1 || numericRating > 10) {
+    return res
+      .status(400)
+      .json({ error: "Rating must be between 1 and 10 (inclusive)" });
+  }
+  const numericYear = parseInt(updatedMovie.year);
+  if (!isNaN(numericYear)) {
+    updatedMovie.year = numericYear;
+  } else {
+    return res.status(400).json({ error: "Invalid field - year to update!" });
+  }
+  movies[index] = {
+    ...movies[index],
+    name: updatedMovie.name,
+    genre: updatedMovie.genre,
+    rating: numericRating,
+    year: numericYear,
+    language: updatedMovie.language,
+  };
+  res.json({ message: "The movie has been updated", movie: movies[index] });
+});
 
 // =============
 
@@ -115,7 +194,6 @@ router.delete("/:id", (req, res) => {
           console.error(err);
           return res.status(500).json({ error: "Internal Server Error" });
         }
-
         res.json({ message: "The movie has been deleted by Dipto" });
       });
     } catch (error) {
